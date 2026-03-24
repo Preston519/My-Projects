@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Input</title>
+</head>
+<h1>Provide depot and addresses</h1>
+<form method="POST" enctype="multipart/form-data">
+    <label for="depot">Depot:</label>
+    <br />
+    <input name="depot">
+    <br />
+    <br />
+    <label for="addresses">Addresses (.csv):</label>
+    <br />
+    <label for="addresses">(PersonID: int, Name: str, Address: str)</label>
+    <br />
+    <input type="file" name="addresses">
+    <br />
+    <br />
+    <label for="constraint">Route Constraints:</label>
+    <br />
+    <select name="constraint">
+        <option value="distance" SELECTED>Distance</option>
+        <option value="time">Time</option>
+        <option value="capacity">Capacity</option>
+    </select>
+    <br />
+    <br />
+    <label for="maximum">Units of measurement: (Capacity: units, Time: minutes, Distance: metres)</label>
+    <br />
+    <input type="number" name="maximum" min="0">
+    <br />
+    <br />
+    <br />
+    <input type="submit">
+    <p>Please be patient, processing may take a few minutes</p>
+    {% if error %}
+    <p style="color:red">{{error}}</p>
+    {% else %}
+    <br />
+    <br />
+    {% endif %}
+    <br>
+    <br>
+    <br>
+    <p>Logged in as {{username}}<br><a href="/logout">Log Out</a></p>
+    <a href="/maps">View processed routes</a>
+</form>
+</html>

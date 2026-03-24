@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Map Display</title>
+</head>
+<body>
+    <h1>Map Display</h1>
+  {% for index in range(len) %}
+  <iframe
+    width="600"
+    height="400"
+    frameborder="0" style="border:0"
+    referrerpolicy="no-referrer-when-downgrade"
+    src={{maps[index]}}
+    allowfullscreen>
+  </iframe>
+  <p>
+    Distance: {{data[index][0]}} metres<br/>
+    Time: {{data[index][1]}} seconds<br/>
+    Stops: {{data[index][2]}}
+  </p>
+</br>
+
+  {% for addressIndex in range(data[index][2]) %}
+  <p>{{addressIndex}}: {{routes[index][addressIndex][0]}}; {{routes[index][addressIndex][1]}}; {{routes[index][addressIndex][2]}}</p>
+  {% endfor %}
+</br>
+  {% endfor %}
+<br />
+<p>Logged in as {{username}}<br><a href="/logout">Log Out</a></p>
+<p><a href="/reset">Reset maps and route data</a></p>
+</body>
+</html>
