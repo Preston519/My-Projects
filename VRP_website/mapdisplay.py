@@ -51,7 +51,7 @@ def routes_to_embed(routes: list = []):
             # address: str
             formatted = address.replace(", ", ",").replace(" ", "+")
             route[route.index(address)] = formatted
-        embeds.append(f"https://www.google.com/maps/embed/v1/directions?key=AIzaSyDE2qaxHADLeBQO1zLqfDIasLOalcHWHi0&origin={route[0]}&destination={route[-1]}&waypoints={'|'.join(route[1:-1])}")
+        embeds.append(f"https://www.google.com/maps/embed/v1/directions?key=AIza&origin={route[0]}&destination={route[-1]}&waypoints={'|'.join(route[1:-1])}")
     return embeds
 
 @app.route('/')
