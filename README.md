@@ -4,5 +4,6 @@ Hey! This is just a storage space to collect any projects or spontaneous obsessi
 
 ### To-do
 
-- Make Yahtzee? (Doable in Scala and Python, not Haskell)
 - Mini website in HTML
+- Haskell project (Sudoku/Maze solver?)
+- BFS/DFS (Haskell? Could do Haskell, Python, and Scala)
