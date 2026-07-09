@@ -1,15 +1,14 @@
-object TryThis {
+object Test {
     def main(args: Array[String]): Unit = {
-        val queue = scala.collection.mutable.Queue(0, 1, 2, 3, 4)
-        println(queue)
-        for (x <- 0 until queue.length){
-            println(x)
-            println(queue.length)
-            queue.dequeue()
+        var cost = 0
+        val a = Array(5,2,1,9,5,7)
+        var b = scala.collection.immutable.List[Int]()
+        var notb = scala.collection.immutable.List[Int]()
+
+        b = a(0) :: b
+
+        for (x <- a) {
+            
         }
     }
 }
-
-// trait Tester {
-//     def test(): Int = 3
-// }
