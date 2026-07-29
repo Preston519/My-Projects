@@ -21,20 +21,39 @@ showPossibilities = unlines . map (map f)
     where f [x] = head (show x)
           f _ = '.'
 
-fullNaiveSolve:: String -> IO ()
-fullNaiveSolve = putStrLn . unlines . map showPossibilities . naiveSolve . possibilities . parseSudoku
+fullMixedSolve:: String -> IO ()
+fullMixedSolve = putStrLn . unlines . map showPossibilities . mixedSolve . possibilities . parseSudoku
 
-naiveSolve:: Grid [Int] -> [Grid [Int]]
-naiveSolve xss | complete xss = [xss]
+mixedSolve:: Grid [Int] -> [Grid [Int]]
+mixedSolve xss | complete xss = [xss]
                | not (valid xss) = []
-               | otherwise = concat [naiveSolve (pruneGrid (replace i j [n] xss)) | n <- xss !! i !! j]
+               | otherwise = concat [mixedSolve (pruneGrid (replace i j [n] xss)) | n <- xss !! i !! j]
         where (i, j) = getMinSlot xss
+
+fullPruneSolve:: String -> IO ()
+fullPruneSolve = putStrLn . unlines . map showPossibilities . pruneSolve . possibilities . parseSudoku
+
+pruneSolve:: Grid [Int] -> [Grid [Int]]
+pruneSolve xsss | complete ysss = [ysss]
+                | not (valid ysss) = []
+                | otherwise = concat [pruneSolve (replace i j [n] ysss) | n <- ysss !! i !! j]
+        where ysss = pruneRecursion xsss
+              (i, j) = getMinSlot ysss
+
+fullNaiveSolve:: String -> IO ()
+fullNaiveSolve = putStrLn . unlines . map showGridInt . naiveSolve . parseSudoku
+
+naiveSolve:: Grid Int -> [Grid Int]
+naiveSolve xss | naiveComplete xss = [xss | naiveValid xss]
+               | otherwise = concatMap naiveSolve [replace i j n xss | n <- [1..9]]
+        where (i, j) = getSlotNaive xss
+        
+
+showGridInt:: Grid Int -> String
+showGridInt = unlines . map (map (head . show))
 
 showCompleted:: Grid [Int] -> Grid Int
 showCompleted = map (map head)
-
-printIt = putStrLn
-
 
 possibilities:: Grid Int -> Grid [Int]
 possibilities = map (map f)
@@ -54,6 +73,14 @@ getMinSlot = fst . f
     where f [] = ((-1, -1), 10)
           f (xs:xss) | snd (minIndex xs) < snd (f xss) = ((0, fst (minIndex xs)), snd (minIndex xs))
                      | otherwise = let ((a, b), c) = f xss in ((a+1, b), c)
+
+-- Pre: Grid not complete
+getSlotNaive:: Grid Int -> (Int, Int)
+getSlotNaive ([]:xss) = (i, j+1)
+    where (i, j) = getSlotNaive xss
+getSlotNaive ((0:xs):xss) = (0, 0)
+getSlotNaive ((x:xs):xss) = if j == 0 then (i+1, j) else (i, j)
+    where (i, j) = getSlotNaive (xs:xss)
 
 nodups:: [Int] -> Bool
 nodups = f . mergesort
@@ -92,6 +119,17 @@ valid = not . any (any null)
 
 complete:: Grid [Int] -> Bool
 complete = all (all (\x -> length x == 1))
+
+-- Pre: Grid is complete
+naiveValid:: Grid Int -> Bool
+naiveValid xss = all nodups (boxes xss) && all nodups (cols xss) && all nodups xss
+
+naiveComplete:: Grid Int -> Bool
+naiveComplete = all (notElem 0)
+
+pruneRecursion:: Grid [Int] -> Grid [Int]
+pruneRecursion xsss | xsss == pruneGrid xsss = xsss
+                    | otherwise = pruneRecursion (pruneGrid xsss)
 
 
 mergesort:: [Int] -> [Int]
