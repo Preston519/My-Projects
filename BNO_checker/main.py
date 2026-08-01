@@ -169,13 +169,13 @@ class MainWindow(qtw.QMainWindow):
                 result = f"Continuous residence limit has been breached.\n\nTotal amount of absent days in the range {break_start.strftime('%d %B %Y')} to {add_year(break_start + datetime.timedelta(days=-1)).strftime('%d %B %Y')} is {absent_count}, which is above 180"
                 break
         if result is None:
-            result = "Continuous residence limit has not been breached. Your settlement application is valid."
+            result = f"Continuous residence limit has not been breached. Your settlement application is valid.\nYou have {180-sum(1 for _ in filter(lambda x: x > datetime.date.today()-datetime.timedelta(days=185), days))} more absent days remaining in the next 180 days (inclusive)."
         self.result_box.setText(result)
         self.page_manager.setCurrentIndex(2)
         
     def save_to_file(self):
         with open("absences.sav", "wb") as file:
-            file.writelines(f"{from_date.toString('yyyy-MM-dd')}, {to_date.toString('yyyy-MM-dd')}\n".encode("utf-8") for from_date, to_date in self.date_ranges)
+            file.writelines(f"{from_date.toString('yyyy-MM-dd')},{to_date.toString('yyyy-MM-dd')}\n".encode("utf-8") for from_date, to_date in self.date_ranges)
         self.message_box.setText("Absences saved to file")
             
     def load_from_file(self):
@@ -188,7 +188,7 @@ class MainWindow(qtw.QMainWindow):
                     for line in file.readlines():
                         if len(line) != 23:
                             raise TypeError
-                        date_ranges.append((QtCore.QDate.fromString(line[:10].decode(), "yyyy-MM-dd"), QtCore.QDate.fromString(line[12:-1].decode(), "yyyy-MM-dd")))
+                        date_ranges.append((QtCore.QDate.fromString(line[:10].decode(), "yyyy-MM-dd"), QtCore.QDate.fromString(line[11:-2].decode(), "yyyy-MM-dd")))
                 self.date_ranges = date_ranges
                 self.rightbox.setPlainText("\n".join(f"{from_date.toString()} to {to_date.toString()}" for from_date, to_date in date_ranges) + "\n")
                 self.message_box.setText("Absences loaded from file")
@@ -199,5 +199,6 @@ app = qtw.QApplication([])
 
 window = MainWindow()
 window.show()
+window.load_from_file()
 
 app.exec()
