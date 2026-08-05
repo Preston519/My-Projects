@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <style>
+            .outer .inner {
+                color: aqua;
+            }
+        </style>
+    </head>
+    <body style="background-color: #87c425;">
+        <h1 style="color: lavender; font-family: fantasy;">Hello!</h1>
+        <p id="alkahest" style="color: aquamarine; background-color: darkorchid; left: 200px; text-shadow: 2px 2px 4px black; position: relative; width:fit-content;">This is a test page</p>
+        <input id="clicker" type="button" onclick="clicked()" value="Switch text">
+        <p>
+            Normal - <small>Small text</small><br>
+            Normal - <sub>Subscript text</sub><br>
+            Normal - <mark>Marked text</mark>
+        </p>
+        <div class="outer">
+            <p class="inner">Tester</p>
+        </div>
+        <p class="inner">Tester</p>
+        
+        <script>
+            function clicked() {
+                document.getElementById("alkahest").innerText = "Testing Javascript"
+                document.getElementById("clicker").disabled = true
+            }
+        </script>
+    </body>
+</html>
