@@ -1,30 +1,83 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            .outer .inner {
-                color: aqua;
-            }
-        </style>
-    </head>
-    <body style="background-color: #87c425;">
-        <h1 style="color: lavender; font-family: fantasy;">Hello!</h1>
-        <p id="alkahest" style="color: aquamarine; background-color: darkorchid; left: 200px; text-shadow: 2px 2px 4px black; position: relative; width:fit-content;">This is a test page</p>
-        <input id="clicker" type="button" onclick="clicked()" value="Switch text">
-        <p>
-            Normal - <small>Small text</small><br>
-            Normal - <sub>Subscript text</sub><br>
-            Normal - <mark>Marked text</mark>
-        </p>
-        <div class="outer">
-            <p class="inner">Tester</p>
-        </div>
-        <p class="inner">Tester</p>
-        
-        <script>
-            function clicked() {
-                document.getElementById("alkahest").innerText = "Testing Javascript"
-                document.getElementById("clicker").disabled = true
-            }
-        </script>
-    </body>
+<head>
+  <title>WebSocket Client</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    #messages {
+      height: 300px;
+      border: 1px solid #ccc;
+      overflow-y: auto;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .message { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <h1>WebSocket Client</h1>
+  <div id="status">Connecting to server...</div>
+  <div id="messages"></div>
+  <div>
+    <input type="text" id="messageInput" placeholder="Type your message">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    const status = document.getElementById('status');
+    const messages = document.getElementById('messages');
+    const messageInput = document.getElementById('messageInput');
+
+    // Connect to the WebSocket server
+    const ws = new WebSocket('ws://localhost:8080');
+
+    // Connection opened
+    ws.onopen = () => {
+      status.textContent = 'Connected to server';
+      status.style.color = 'green';
+    };
+
+    // Listen for messages
+    ws.onmessage = (event) => {
+      const message = document.createElement('div');
+      message.className = 'message';
+      message.textContent = event.data;
+      messages.appendChild(message);
+      messages.scrollTop = messages.scrollHeight;
+    };
+
+    // Handle errors
+    ws.onerror = (error) => {
+      status.textContent = 'Error: ' + error.message;
+      status.style.color = 'red';
+    };
+
+    // Handle connection close
+    ws.onclose = () => {
+      status.textContent = 'Disconnected from server';
+      status.style.color = 'red';
+    };
+
+    // Function to send a message
+    function sendMessage() {
+      const message = messageInput.value.trim();
+      if (message) {
+        ws.send(message);
+        messageInput.value = '';
+      }
+    }
+
+    // Send message on Enter key
+    messageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
 </html>
