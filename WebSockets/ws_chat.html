@@ -3,16 +3,81 @@
     <head>
         <title>Test page</title>
         <style>
-            p {
-                color: blueviolet;
+            /* html, body { */
+                /* height: 100%; */
+                /* margin: ; */
+            /* } */
+
+            body {
+                background-color: darkgray;
+                display: flex;
+                flex-direction: column;
+                height: calc(100vh - 16px);
+                /* height: 50vh; */
+            }
+
+            #connecting {
+                color: darkviolet;
+                display: inline;
+                /* height: 1lh; */
+                /* color: red; */
+                /* color: limegreen; */
+                margin: 5px;
+            }
+
+            #text {
+                display: inline;
+                overflow: auto;
+                /* height: 65vh; */
+                width: 100%;
+                /* background-color: inherit; */
+                /* background-color: white; */
+                flex-grow: 1;
+                margin-top: 0;
+                /* color:bisque; */
+            }
+
+            #form {
+                display: flex;
+                background-color: gray;
+                color: whitesmoke;
+                padding: 10px;
+                border-radius: 5px;
+                justify-content: right;
+                align-items: center;
+            }
+
+            #textbox {
+                border: 0;
+                background-color: inherit;
+                outline: 0;
+                resize: none;
+                flex-grow: 1;
+                field-sizing: content;
+                max-height: 5lh;
+                scrollbar-width: thin;
+            }
+
+            #send {
+                border: 0;
+                cursor: pointer;
+                background-color: lime;
+                border-radius: 5px;
+                outline: 0;
+                padding: 5px;
+            }
+
+            #send:active {
+                background-color: limegreen;
             }
         </style>
     </head>
     <body>
-        <p id="text">Test text</p>
+        <p id="connecting">&bull; <span id="connText">Connecting...</span></p>
+        <p id="text"></p>
         <form id="form">
-            <input type="text" id="textbox">
-            <input type="submit" value="Send">
+            <textarea id="textbox" rows="1" form="form"></textarea>
+            <input type="submit" id="send" value="Send">
         </form>
         <script src="ws_chat.js" type="module"></script>
         <!-- <script type="module">
