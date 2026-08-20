@@ -1,0 +1,90 @@
+body {
+    background-color: darkgray;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 16px);
+    /* height: 50vh; */
+}
+
+#connecting {
+    color: darkviolet;
+    display: inline;
+    /* height: 1lh; */
+    /* color: red; */
+    /* color: limegreen; */
+    margin: 5px;
+}
+
+#text {
+    display: inline;
+    overflow: auto;
+    /* height: 65vh; */
+    width: 100%;
+    /* background-color: inherit; */
+    /* background-color: white; */
+    flex-grow: 1;
+    margin-top: 0;
+    /* color:bisque; */
+}
+
+#form {
+    display: flex;
+    background-color: gray;
+    color: whitesmoke;
+    padding: 10px;
+    border-radius: 5px;
+    justify-content: right;
+    align-items: center;
+}
+
+#textbox {
+    border: 0;
+    background-color: inherit;
+    outline: 0;
+    resize: none;
+    flex-grow: 1;
+    field-sizing: content;
+    max-height: 5lh;
+    scrollbar-width: thin;
+}
+
+#send {
+    border: 0;
+    cursor: pointer;
+    background-color: lime;
+    border-radius: 5px;
+    outline: 0;
+    padding: 5px;
+}
+
+#send:active {
+    background-color: limegreen;
+}
+
+#popupBackground {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: rgba(0,0,0,0.65);
+    z-index: 1;
+}
+
+#popupBox {
+    background-color: white;
+    margin: 5% auto;
+    width: fit-content;
+    padding: 3% 5%;
+}
+
+#login * {
+    display: block;
+    /* background-color: blue; */
+    /* text-align: center; */
+    /* margin: 5%; */
+}
+
+#login input[type="submit"] {
+    justify-self: center;
+}

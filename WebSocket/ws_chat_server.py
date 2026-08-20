@@ -19,14 +19,15 @@ async def handler(connection: websockets.ClientConnection): # Handler for a conn
     #     print(f"Received message: {message}")
     #     await connection.send(message)
     
-    username = await connection.recv()
+    info = json.loads(await connection.recv())
+    username = info["username"]
+    colour = info["colour"]
     
     async for message in connection:
         print(f"Received message: {message}")
         async with asyncio.TaskGroup() as tgroup:
             for user in connections:
-                if user != connection:
-                    tgroup.create_task(user.send(f"{username}: {message}"))
+                tgroup.create_task(user.send(json.dumps({"username": username, "colour": colour, "message": message})))
     connections.remove(connection)
     print("Client disconnected")
 
@@ -34,8 +35,6 @@ async def main():
     server = await websockets.serve(handler, "localhost", 8080)
     print("Server online")
     await server.serve_forever()
-    # Replacing sleep will define server lifetime. Server closes when program terminates
-    # await asyncio.sleep(30)
     print("Server offline")
     
         
