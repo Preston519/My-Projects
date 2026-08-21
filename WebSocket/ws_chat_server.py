@@ -1,6 +1,7 @@
 import websockets
 import asyncio
 import json
+import time
 
 connections = set()
 
@@ -25,9 +26,10 @@ async def handler(connection: websockets.ClientConnection): # Handler for a conn
     
     async for message in connection:
         print(f"Received message: {message}")
+        timestamp = time.time()
         async with asyncio.TaskGroup() as tgroup:
             for user in connections:
-                tgroup.create_task(user.send(json.dumps({"username": username, "colour": colour, "message": message})))
+                tgroup.create_task(user.send(json.dumps({"username": username, "colour": colour, "message": message, "time": timestamp})))
     connections.remove(connection)
     print("Client disconnected")
 

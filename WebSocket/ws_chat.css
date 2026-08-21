@@ -7,12 +7,23 @@ body {
 }
 
 #connecting {
-    color: darkviolet;
+    /* color: darkviolet; */
     display: inline;
     /* height: 1lh; */
     /* color: red; */
     /* color: limegreen; */
     margin: 5px;
+}
+
+#reconnect {
+    display: inline;
+    visibility: hidden;
+    width: fit-content;
+    margin-left: 3%;
+    background-color: lightskyblue;
+    border: 0;
+    border-radius: 5px;
+    padding: 5px 7px;
 }
 
 #text {
