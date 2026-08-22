@@ -1,4 +1,4 @@
-// TODO: saving chat history
+// TODO: multiple chats
 
 let wss = null
 let connected = false
@@ -63,7 +63,13 @@ function connOpened() {
 
 function connMessage(msg) {
     const data = JSON.parse(msg.data)
-    document.getElementById("text").innerHTML += `<p><span style="color: ${data.colour}">${data.username}</span><br>${data.message}<br><span style="color: dimgrey; font-size: 0.6em">${epochToString(data.time)}</span></p>`
+    const t = document.getElementById("text")
+    const gap = t.scrollHeight - t.scrollTop - t.clientHeight
+    t.innerHTML += `<span style="color: ${data.colour}">${data.username}</span><br>${data.message}<br><span style="color: dimgrey; font-size: 0.6em">${epochToString(data.time)}</span><br><br>`
+    if (gap <= 10) {
+        // If at bottom, autoscroll to keep new message in view
+        t.scrollTop = t.scrollHeight
+    }
 }
 
 function epochToString(secEpoch) {

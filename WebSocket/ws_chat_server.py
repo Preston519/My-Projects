@@ -2,6 +2,7 @@ import websockets
 import asyncio
 import json
 import time
+import csv
 
 connections = set()
 
@@ -12,21 +13,21 @@ async def send_message(message):
 async def handler(connection: websockets.ClientConnection): # Handler for a connected client
     print("Client connected")
     connections.add(connection)
-    # while True:
-    #     try:
-    #         message = await connection.recv()
-    #     except websockets.exceptions.ConnectionClosedOK:
-    #         break
-    #     print(f"Received message: {message}")
-    #     await connection.send(message)
     
     info = json.loads(await connection.recv())
     username = info["username"]
     colour = info["colour"]
-    
+    with open("chat-history/chat.csv", "r", newline='') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            await connection.send(json.dumps(row))
+
+    filename = "chat-history/chat.csv"
     async for message in connection:
         print(f"Received message: {message}")
-        timestamp = time.time()
+        timestamp = int(time.time())
+        with open(filename, "a", newline='') as file:
+            csv.writer(file, quoting=csv.QUOTE_MINIMAL).writerow([username, colour, message, timestamp])
         async with asyncio.TaskGroup() as tgroup:
             for user in connections:
                 tgroup.create_task(user.send(json.dumps({"username": username, "colour": colour, "message": message, "time": timestamp})))

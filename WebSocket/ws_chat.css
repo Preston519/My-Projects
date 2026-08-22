@@ -24,6 +24,11 @@ body {
     border: 0;
     border-radius: 5px;
     padding: 5px 7px;
+    cursor: pointer;
+}
+
+#reconnect:hover {
+    box-shadow: 0 0 10px 0 black;
 }
 
 #text {
