@@ -4,6 +4,5 @@ Hey! This is just a storage space to collect any projects or spontaneous obsessi
 
 ### To-do
 
-- Mini website in HTML
-- Haskell project (Sudoku/Maze solver?)
-- BFS/DFS (Haskell? Could do Haskell, Python, and Scala)
+- Chat app updates
+- Graph algorithms (Haskell? Could do Haskell, Python, and Scala)
