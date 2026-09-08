@@ -3,6 +3,8 @@ import asyncio
 import json
 import time
 import csv
+from http import HTTPStatus
+import bcrypt
 
 connections = set()
 
@@ -30,12 +32,28 @@ async def handler(connection: websockets.ClientConnection): # Handler for a conn
             csv.writer(file, quoting=csv.QUOTE_MINIMAL).writerow([username, colour, message, timestamp])
         async with asyncio.TaskGroup() as tgroup:
             for user in connections:
-                tgroup.create_task(user.send(json.dumps({"username": username, "colour": colour, "message": message, "time": timestamp})))
+                tgroup.create_task(user.send(json.dumps({"type": "message", "username": username, "colour": colour, "message": message, "time": timestamp})))
     connections.remove(connection)
     print("Client disconnected")
+    
+async def process_request(connection: websockets.ServerConnection, request: websockets.Request):
+    if request.path == "/login":
+        username = request.headers.get("X-Username")
+        password = request.headers.get("X-Password")
+        # TODO: Validate username and password
+        valid = True
+        if valid:
+            # TODO: Generate auth token (JWT?)
+            token = "Placeholder" # REPLACE
+            response =  connection.respond(HTTPStatus.OK, '{"success": "true", "token": "{}"}'.format(token))
+        else:
+            response = connection.respond(HTTPStatus.UNAUTHORIZED, '{"success": "false"}')
+        response.headers["Content-Type"] = "application/json"
+        return response
+    return None
 
 async def main():
-    server = await websockets.serve(handler, "localhost", 8080)
+    server = await websockets.serve(handler, "localhost", 8080, process_request=process_request)
     print("Server online")
     await server.serve_forever()
     print("Server offline")

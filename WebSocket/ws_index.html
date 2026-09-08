@@ -1,15 +1,33 @@
 <!DOCTYPE html>
 <html>
     <head>
-
+        <link href="ws_index.css" rel="stylesheet">
     </head>
     <body>
-        <form>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username">
-            <label for="password">Password:</label>
-            <input type="text" id="password" name="password">
-            <input type="submit">
-        </form>
+        <!-- <div id="container"> -->
+            <img src="logo.png" alt="Teatime logo">
+            <div id="formbox">
+                <form id="login">
+                    <label for="username">Username:</label><br>
+                    <input type="text" id="username" name="username"><br><br>
+                    <label for="password">Password:</label><br>
+                    <input type="text" id="password" name="password"><br><br>
+                    <input type="submit" id="submit">
+                </form>
+            </div>
+            <p id="error">&nbsp;</p>
+        <!-- </div> -->
+        <script src="ws_index.js"></script>
     </body>
 </html>
+
+<!--
+Plan:
+ - Login site sends login details to server. Server either replies with error (invalid login) or acceptance with an auth token. Then redirect to chat site.
+ - Auth token is stored in some indefinite browser-side storage. TODO: find this
+ - Login site, on load, checks if an auth token is stored. If yes, it sends auth message to server to check validity.
+ - If the auth token is valid, login site automatically redirects to chat site.
+ - Auth token is sent with every message. Server checks if the auth token is valid for that user before approving the message.
+ - Auth token is also checked on chat site load. IF auth token check fails at any point, redirect back to login page with an error, and browser clears stored auth token.
+ - Maybe set auth token expiry?
+-->
