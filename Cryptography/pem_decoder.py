@@ -1,11 +1,14 @@
 # Given a PEM encoded RSA key (with no headers and whitespace removed), return the exponent and modulus contained in the data.
 # Iteration works per byte. The bytes starting \x are those without a Unicode character
 
+import b64
+
 # TODO: Make parser v2 that hardcodes Integer orders pursuant to PKCS rather than testing length
 """
 Parser spec:
     Input: Bit string
     Output: (Int|None, Int|None)
+Should overall return (modulus, exponent) when fed full key.
 If current TLV segment contains both modulus and exponent of the key, returns (modulus, exponent).
 If it contains exactly one of modulus or exponent, returns (Int, None)
 If contains neither, returns (None, None)
@@ -19,7 +22,7 @@ The parser will fail if any of the following are true:
 This function steps in and recurses on Sequences, Octet Strings, and Bit Strings, returns on Integers, and ignores everything else.
 Only the first two Integers larger than 64 bits will be returned.
 """
-def parse(bstring, debug=False, depth=0):
+def parse(bstring: bytes, debug=False, depth=0):
     if not bstring:
         return (None, None)
     # Handle the first TLV segment in the bitstring
@@ -51,7 +54,6 @@ def parse(bstring, debug=False, depth=0):
             # For RSA this should always be 0x00.
             if bstring[0] == 0x03:
                 i += 1
-            # Step in
             a, b = parse(bstring[i:i+length], debug, depth+1)
         # INTEGER
         case 0x02:
@@ -74,26 +76,17 @@ def parse(bstring, debug=False, depth=0):
     else:
         return (a,b)
    
-   
+def parseFile(filepath, debug=False):
+    with open(filepath, "r") as file:
+        data = b64.decode("".join(row[:-1] for row in file.readlines()[1:-1]))
+    return parse(data, debug)
+
 
 if __name__ == "__main__":
     import os
-    import base64
 
-    address = os.getenv("PRIVATE_KEY_FILE")
-    with open(address, "r") as file:
-        key = "".join(row[:-1] for row in file.readlines()[1:-1])
-    data = base64.b64decode(key.encode("utf-8"))
-    # print(data)
-    # print(len(data))
-    # print(parse(data, 0))
-    n0, e = parse(data, True)
-    
-    address = os.getenv("PUBLIC_KEY_FILE")
-    with open(address, "r") as file:
-        key = "".join(row[:-1] for row in file.readlines()[1:-1])
-    data = base64.b64decode(key.encode("utf-8"))
-    n1, d = parse(data, True)
+    n0, e = parseFile(os.getenv("PRIVATE_KEY_FILE"), True)
+    n1, d = parseFile(os.getenv("PUBLIC_KEY_FILE"), True)
     
     print(n0, e)
     print(n1, d)
