@@ -45,7 +45,7 @@ def parse(bstring: bytes, debug=False, depth=0):
     
     # Tags are constructed with bits in pattern 00 0 00000
     # First two bits are always 00 to denote Universal (Types defined by ASN.1) since all types we use will be ASN.1-defined.
-    # Third bit is 0 if type is Primitive (raw type, like string) or 1 if Constructed (Nested container, like sequence)
+    # Third bit is 0 if type is Primitive (raw type, like string) or 1 if Constructed (nested container, like sequence)
     # Last five bits are the type's specific identifier, defined by ASN.1.
     match bstring[0]:
         # SEQUENCE, BIT STRING, OCTET STRING
@@ -76,7 +76,7 @@ def parse(bstring: bytes, debug=False, depth=0):
     else:
         return (a,b)
    
-def parseFile(filepath, debug=False):
+def parse_file(filepath, debug=False):
     with open(filepath, "r") as file:
         data = b64.decode("".join(row[:-1] for row in file.readlines()[1:-1]))
     return parse(data, debug)
@@ -85,8 +85,8 @@ def parseFile(filepath, debug=False):
 if __name__ == "__main__":
     import os
 
-    n0, e = parseFile(os.getenv("PRIVATE_KEY_FILE"), True)
-    n1, d = parseFile(os.getenv("PUBLIC_KEY_FILE"), True)
+    n0, e = parse_file(os.getenv("PRIVATE_KEY_FILE"), True)
+    n1, d = parse_file(os.getenv("PUBLIC_KEY_FILE"), True)
     
     print(n0, e)
     print(n1, d)

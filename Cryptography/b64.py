@@ -2,6 +2,12 @@
 
 CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
+def url_encode(bstring: bytes):
+    return encode(bstring).replace("+", "-").replace("/", "_").rstrip("=")
+
+def url_decode(string: str):
+    return decode(string.replace("-", "+").replace("_", "/") + (4 - len(string) % 4) * "=")
+
 def decode(string: str):
     if len(string) % 4:
         raise ValueError("Invalid b64 string")
@@ -30,20 +36,35 @@ def decode(string: str):
 
 def encode(bstring: bytes):
     res = ""
-    for i in range(0, len(bstring)-3, 3):
+    for i in range(0, len(bstring)-2, 3):
         n = int.from_bytes(bstring[i:i+3])
         res += "".join(CHARSET[n >> j & 0x3f] for j in range(18, -1, -6))
     
     suff = len(bstring) % 3
-    n = int.from_bytes(bstring[-suff:]) << (3 - suff) * 2
-    res += "".join(CHARSET[n >> j & 0x3f] for j in range((suff) * 6, -1, -6)) + "=" * (3 - suff)
+    if suff != 0:
+        n = int.from_bytes(bstring[-suff:]) << (3 - suff) * 2
+        res += "".join(CHARSET[n >> j & 0x3f] for j in range(suff * 6, -1, -6)) + "=" * (3 - suff)
     
     return res
 
 if __name__ == "__main__":
+    import base64
     TEST = "d2txbmxha3NvaSkqIDEiIlEiOldBZGRkZGRkZA=="
+    declib = base64.b64decode(TEST)
     dec = decode(TEST)
+    enclib = base64.b64encode(declib)
     enc = encode(dec)
     print(dec)
     print(enc)
+    print(dec == declib)
+    print(enc.encode("utf-8") == enclib)
     print(TEST == enc)
+    enclib_url = base64.urlsafe_b64encode(dec)
+    enc_url = url_encode(dec)
+    declib_url = base64.urlsafe_b64decode(enclib_url)
+    dec_url = url_decode(enc_url)
+    print(enc_url)
+    print(enclib_url)
+    print(dec_url)
+    print(enc_url.encode("utf-8") == enclib_url)
+    print(dec_url == declib_url)
