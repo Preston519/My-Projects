@@ -72,10 +72,15 @@ function connMessage(msg) {
             t.scrollTop = t.scrollHeight
         }
     }
+    else if (data.type == "auth") {
+        // TODO: add redirect on failure, do nothing on success
+    }
 }
 
 function epochToString(secEpoch) {
     return (new Date(secEpoch * 1000)).toLocaleString()
 }
+
+// TODO: Check if logged in
 
 setup()
