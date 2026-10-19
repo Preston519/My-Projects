@@ -37,5 +37,6 @@ def findMax(schedule, k, fixedPay, bonus):
             maxnum = x
     print(maxnum)
     return sum((x*(fixedPay + bonus) - bonus) for x in b) + c[maxnum] + (k-maxnum) * (fixedPay + bonus)
-    
-print(findMax("10010111", 2, 4, 3))
+
+if __name__ == "__main__":
+    print(findMax("10010111", 2, 4, 3))
